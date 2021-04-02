@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const defaultSalt = parseInt(process.env.DEFAULT_SALT, 10);
+const jwtKey = process.env.JWT_KEY;
+
 const UserSchema = new mongoose.Schema(
     {
         username: {
@@ -38,7 +41,7 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password, 8);
+        user.password = await bcrypt.hash(user.password, defaultSalt);
     }
     next();
 });
@@ -57,7 +60,7 @@ UserSchema.methods.generateAuthToken = function () {
             _id: this._id,
             username: this.username,
         },
-        process.env.JWT_KEY
+        jwtKey
     );
     this.tokens = this.tokens.concat({ token });
     this.save();
