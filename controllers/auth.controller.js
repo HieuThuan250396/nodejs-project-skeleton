@@ -55,7 +55,7 @@ const AuthController = () => {
         try {
             req.user.tokens.splice(0, req.user.tokens.length);
             await req.user.save();
-            res.send();
+            res.send({ message: 'Logout Done!' });
         } catch (error) {
             res.status(500).send(error);
         }
