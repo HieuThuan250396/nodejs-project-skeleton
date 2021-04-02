@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 
 // middlewares
 app.use(express.json());
-app.use(cors);
+app.use(cors());
 app.use('/', route);
 
 // build io socket
